@@ -1,0 +1,2047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SkipTheLine– College Canteen Management</title>
+ 
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+ 
+<!-- Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+ 
+<style>
+/* ─── RESET & BASE ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+:root {
+  --indigo:    #4F46E5;
+  --indigo-d:  #3730A3;
+  --violet:    #7C3AED;
+  --grad:      linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+  --grad-soft: linear-gradient(135deg, #EEF2FF 0%, #F5F3FF 100%);
+  --amber:     #F59E0B;
+  --green:     #10B981;
+  --red:       #EF4444;
+  --surface:   #FFFFFF;
+  --bg:        #F8F7FF;
+  --border:    #E5E7EB;
+  --text-1:    #111827;
+  --text-2:    #374151;
+  --text-3:    #6B7280;
+  --text-4:    #9CA3AF;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --shadow-md: 0 4px 16px rgba(0,0,0,.08), 0 1px 4px rgba(0,0,0,.04);
+  --shadow-lg: 0 10px 40px rgba(79,70,229,.15), 0 2px 8px rgba(0,0,0,.06);
+  --shadow-xl: 0 20px 60px rgba(79,70,229,.18);
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --font: 'Plus Jakarta Sans', sans-serif;
+  --font-display: 'Syne', sans-serif;
+}
+ 
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text-1);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+ 
+/* ─── PAGES ─────────────────────────────────────────────────── */
+.page { display: none; min-height: 100vh; animation: fadeIn .35s ease; }
+.page.active { display: block; }
+ 
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+ 
+/* ─── SCROLLBAR ──────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 99px; }
+ 
+/* ─── UTILITY ────────────────────────────────────────────────── */
+.flex   { display: flex; }
+.flex-c { display: flex; align-items: center; }
+.flex-b { display: flex; align-items: center; justify-content: space-between; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.gap-8  { gap: 8px; }
+.gap-12 { gap: 12px; }
+.gap-16 { gap: 16px; }
+ 
+/* ─── SHARED BUTTON ──────────────────────────────────────────── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 13px 24px; border-radius: var(--radius-sm);
+  font-family: var(--font); font-size: 14px; font-weight: 600;
+  cursor: pointer; border: none; transition: all .22s cubic-bezier(.4,0,.2,1);
+  letter-spacing: .01em; text-decoration: none; white-space: nowrap;
+}
+.btn-primary {
+  background: var(--grad); color: #fff;
+  box-shadow: 0 4px 14px rgba(79,70,229,.35);
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(79,70,229,.45);
+}
+.btn-primary:active { transform: translateY(0); }
+.btn-outline {
+  background: transparent; color: var(--indigo);
+  border: 1.5px solid var(--indigo);
+}
+.btn-outline:hover { background: #EEF2FF; }
+.btn-ghost {
+  background: var(--grad-soft); color: var(--indigo);
+}
+.btn-ghost:hover { background: #EEF2FF; }
+.btn-sm { padding: 8px 16px; font-size: 13px; border-radius: 8px; }
+.btn-full { width: 100%; }
+.btn-danger { background: var(--red); color: #fff; box-shadow: 0 4px 14px rgba(239,68,68,.25); }
+.btn-success { background: var(--green); color: #fff; box-shadow: 0 4px 14px rgba(16,185,129,.25); }
+ 
+/* ─── BADGE ──────────────────────────────────────────────────── */
+.badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 10px; border-radius: 99px; font-size: 11.5px; font-weight: 600;
+}
+.badge-low    { background: #D1FAE5; color: #065F46; }
+.badge-medium { background: #FEF3C7; color: #92400E; }
+.badge-high   { background: #FEE2E2; color: #991B1B; }
+.badge-best   { background: var(--grad); color: #fff; }
+.badge-purple { background: #EDE9FE; color: #5B21B6; }
+ 
+/* ─── CARD ───────────────────────────────────────────────────── */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+ 
+/* ─── INPUT ──────────────────────────────────────────────────── */
+.input-wrap { position: relative; }
+.input-wrap .icon {
+  position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+  color: var(--text-3); font-size: 15px; pointer-events: none;
+}
+input[type=text], input[type=email], input[type=number] {
+  width: 100%; padding: 14px 16px 14px 44px;
+  border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+  font-family: var(--font); font-size: 15px; color: var(--text-1);
+  background: #fff; transition: border-color .2s, box-shadow .2s; outline: none;
+}
+input:focus {
+  border-color: var(--indigo);
+  box-shadow: 0 0 0 4px rgba(79,70,229,.12);
+}
+input::placeholder { color: var(--text-4); }
+ 
+/* ─── BOTTOM NAV (shared across inner pages) ─────────────────── */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 100%; max-width: 430px;
+  background: rgba(255,255,255,.92); backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(229,231,235,.7);
+  display: flex; padding: 10px 0 calc(10px + env(safe-area-inset-bottom));
+  z-index: 100; box-shadow: 0 -4px 20px rgba(0,0,0,.06);
+}
+.nav-item {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
+  font-size: 10px; font-weight: 600; color: var(--text-3);
+  cursor: pointer; transition: color .2s; padding: 4px 0;
+  letter-spacing: .03em; text-transform: uppercase;
+}
+.nav-item i { font-size: 18px; transition: transform .2s; }
+.nav-item.active { color: var(--indigo); }
+.nav-item.active i { transform: scale(1.1); }
+.nav-item:hover { color: var(--indigo); }
+ 
+/* ─── INNER PAGE WRAPPER ─────────────────────────────────────── */
+.inner { max-width: 430px; margin: 0 auto; padding: 0 0 88px; }
+ 
+/* ─────────────────────────────────────────────────────────────── */
+/*   PAGE 1 · LOGIN                                               */
+/* ─────────────────────────────────────────────────────────────── */
+#login-page {
+  min-height: 100vh;
+  background: linear-gradient(160deg, #0F0E2E 0%, #1E1B5E 40%, #3730A3 70%, #4F46E5 100%);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 24px; position: relative; overflow: hidden;
+}
+ 
+/* floating orbs */
+#login-page::before, #login-page::after {
+  content: ''; position: absolute; border-radius: 50%;
+  background: rgba(124,58,237,.25); filter: blur(70px); pointer-events: none;
+}
+#login-page::before { width: 380px; height: 380px; top: -80px; left: -100px; }
+#login-page::after  { width: 300px; height: 300px; bottom: -60px; right: -80px;
+  background: rgba(79,70,229,.3); }
+ 
+.login-logo {
+  display: flex; flex-direction: column; align-items: center; margin-bottom: 40px; position: relative;
+}
+.logo-icon {
+  width: 76px; height: 76px; border-radius: 22px;
+  background: rgba(255,255,255,.12); backdrop-filter: blur(16px);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 34px; margin-bottom: 16px;
+  border: 1.5px solid rgba(255,255,255,.2);
+  box-shadow: 0 8px 32px rgba(0,0,0,.25);
+  animation: float 3.5s ease-in-out infinite;
+}
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+.logo-name {
+  font-family: var(--font-display); font-size: 30px; color: #fff;
+  letter-spacing: -.5px;
+}
+.logo-tagline {
+  font-size: 13px; color: rgba(255,255,255,.55); margin-top: 4px;
+  letter-spacing: .04em;
+}
+ 
+.login-card {
+  background: rgba(255,255,255,.07); backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1.5px solid rgba(255,255,255,.15);
+  border-radius: var(--radius-xl); padding: 32px 28px;
+  width: 100%; max-width: 380px; position: relative;
+}
+.login-card h2 {
+  font-family: var(--font-display); font-size: 22px; color: #fff;
+  margin-bottom: 6px;
+}
+.login-card p { font-size: 13.5px; color: rgba(255,255,255,.55); margin-bottom: 28px; }
+ 
+.login-card input {
+  background: rgba(255,255,255,.1);
+  border-color: rgba(255,255,255,.2);
+  color: #fff; padding-left: 44px;
+}
+.login-card input::placeholder { color: rgba(255,255,255,.4); }
+.login-card input:focus {
+  border-color: rgba(255,255,255,.5);
+  box-shadow: 0 0 0 4px rgba(255,255,255,.08);
+}
+.login-card .input-wrap .icon { color: rgba(255,255,255,.5); }
+ 
+.otp-row { display: flex; gap: 10px; margin-top: 14px; }
+.otp-row input { text-align: center; padding-left: 16px; letter-spacing: .2em; font-size: 22px; font-weight: 700; }
+ 
+.login-btn {
+  width: 100%; padding: 15px; margin-top: 24px;
+  background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+  border: none; border-radius: 14px; color: #fff; font-family: var(--font);
+  font-size: 15px; font-weight: 700; cursor: pointer;
+  transition: all .22s; box-shadow: 0 6px 20px rgba(99,102,241,.4);
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.login-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(99,102,241,.5); }
+ 
+.login-footer {
+  margin-top: 28px; text-align: center;
+  font-size: 12px; color: rgba(255,255,255,.35); line-height: 1.7;
+}
+.login-footer span { color: rgba(255,255,255,.6); cursor: pointer; }
+ 
+/* step dots */
+.steps-row {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 28px;
+}
+.step-dot {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: rgba(255,255,255,.12); border: 1.5px solid rgba(255,255,255,.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; color: rgba(255,255,255,.5);
+  transition: all .3s;
+}
+.step-dot.active {
+  background: linear-gradient(135deg, #6366F1, #8B5CF6);
+  border-color: transparent; color: #fff;
+  box-shadow: 0 0 0 4px rgba(99,102,241,.3);
+}
+.step-dot.done { background: var(--green); border-color: transparent; color: #fff; }
+.step-line {
+  flex: 1; height: 1.5px; background: rgba(255,255,255,.15); border-radius: 99px;
+}
+.step-line.done { background: var(--green); }
+ 
+/* ─────────────────────────────────────────────────────────────── */
+/*   PAGE 2 · HOME DASHBOARD                                       */
+/* ─────────────────────────────────────────────────────────────── */
+.home-header {
+  background: linear-gradient(135deg, #0F0E2E 0%, #1E1B5E 50%, #3730A3 100%);
+  padding: 52px 20px 100px;
+  position: relative; overflow: hidden;
+}
+.home-header::after {
+  content: ''; position: absolute; width: 260px; height: 260px;
+  background: rgba(124,58,237,.2); border-radius: 50%;
+  top: -60px; right: -60px; filter: blur(50px); pointer-events: none;
+}
+.header-top {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 22px; position: relative; z-index: 1;
+}
+.header-logo {
+  display: flex; align-items: center; gap: 10px;
+}
+.header-logo-icon {
+  width: 38px; height: 38px; background: rgba(255,255,255,.15);
+  backdrop-filter: blur(8px); border-radius: 11px;
+  display: flex; align-items: center; justify-content: center; font-size: 18px;
+  border: 1px solid rgba(255,255,255,.2);
+}
+.header-logo-text {
+  font-family: var(--font-display); font-size: 19px; color: #fff; letter-spacing: -.3px;
+}
+.header-avatar {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: linear-gradient(135deg, #6366F1, #8B5CF6);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; font-weight: 700; color: #fff; cursor: pointer;
+  border: 2px solid rgba(255,255,255,.3);
+}
+.greeting {
+  position: relative; z-index: 1;
+}
+.greeting-sub { font-size: 13px; color: rgba(255,255,255,.5); margin-bottom: 4px; }
+.greeting-main {
+  font-family: var(--font-display); font-size: 26px; color: #fff;
+  line-height: 1.15; margin-bottom: 12px;
+}
+.greeting-main span { color: #A5B4FC; }
+ 
+.stats-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,.1); backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,.15);
+  padding: 7px 14px; border-radius: 99px; font-size: 13px; color: rgba(255,255,255,.8);
+}
+.stats-pill i { color: #A5B4FC; }
+ 
+/* search bar */
+.home-search {
+  margin: -36px 16px 0; position: relative; z-index: 10;
+}
+.home-search input {
+  padding: 15px 16px 15px 48px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  font-size: 14px; border-width: 1px;
+}
+.home-search .icon { font-size: 16px; }
+ 
+/* canteen cards */
+.section { padding: 20px 16px; }
+.section-title {
+  font-size: 18px; font-weight: 800; color: var(--text-1); margin-bottom: 16px;
+  font-family: var(--font-display);
+}
+.section-title span { color: var(--indigo); }
+ 
+.canteen-card {
+  background: var(--surface); border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  overflow: hidden; margin-bottom: 16px;
+  transition: transform .25s, box-shadow .25s;
+  cursor: pointer; border: 1px solid rgba(229,231,235,.6);
+}
+.canteen-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+ 
+.canteen-hero {
+  height: 160px; position: relative; overflow: hidden;
+  display: flex; align-items: flex-end;
+}
+.canteen-bg {
+  position: absolute; inset: 0; font-size: 100px;
+  display: flex; align-items: center; justify-content: center;
+  line-height: 1; user-select: none;
+}
+.canteen-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,.65) 0%, transparent 60%);
+}
+.canteen-hero-info {
+  position: relative; z-index: 1; padding: 14px 16px; width: 100%;
+  display: flex; align-items: flex-end; justify-content: space-between;
+}
+.canteen-name {
+  font-family: var(--font-display); font-size: 19px; font-weight: 800; color: #fff;
+}
+.canteen-sub { font-size: 12px; color: rgba(255,255,255,.7); margin-top: 2px; }
+ 
+.canteen-body { padding: 14px 16px 16px; }
+.canteen-meta {
+  display: flex; align-items: center; gap: 16px; margin-bottom: 14px;
+}
+.meta-item {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 12.5px; color: var(--text-3);
+}
+.meta-item i { color: var(--indigo); font-size: 12px; }
+.canteen-btns { display: flex; gap: 10px; }
+.canteen-btns .btn { flex: 1; font-size: 13px; padding: 10px 12px; border-radius: 10px; }
+ 
+/* quick stats row */
+.quick-stats {
+  display: flex; gap: 10px; padding: 0 16px 20px;
+}
+.stat-chip {
+  flex: 1; background: var(--surface); border-radius: var(--radius-sm);
+  padding: 14px 12px; box-shadow: var(--shadow-sm);
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  border: 1px solid rgba(229,231,235,.6);
+  transition: transform .2s;
+}
+.stat-chip:hover { transform: translateY(-2px); }
+.stat-num {
+  font-family: var(--font-display); font-size: 22px; font-weight: 800; color: var(--indigo);
+}
+.stat-lbl { font-size: 10.5px; color: var(--text-3); text-align: center; line-height: 1.3; }
+ 
+/* notice banner */
+.notice-banner {
+  margin: 0 16px 20px;
+  background: linear-gradient(135deg, #EEF2FF 0%, #F5F3FF 100%);
+  border: 1px solid #C7D2FE; border-radius: var(--radius-md);
+  padding: 14px 16px; display: flex; align-items: center; gap: 12px;
+}
+.notice-icon {
+  width: 36px; height: 36px; background: var(--grad); border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.notice-text p:first-child { font-size: 13px; font-weight: 700; color: var(--indigo-d); }
+.notice-text p:last-child  { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+ 
+/* ─────────────────────────────────────────────────────────────── */
+/*   PAGE 3 · MENU                                                 */
+/* ─────────────────────────────────────────────────────────────── */
+.page-header {
+  background: #fff; padding: 52px 16px 16px;
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 50;
+}
+.back-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 13px; font-weight: 600; color: var(--indigo); cursor: pointer;
+  margin-bottom: 10px; background: none; border: none; padding: 0;
+  font-family: var(--font);
+}
+.back-btn:hover { opacity: .7; }
+.page-header h1 {
+  font-family: var(--font-display); font-size: 22px; color: var(--text-1);
+  margin-bottom: 14px;
+}
+ 
+/* categories */
+.categories {
+  display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px;
+  scrollbar-width: none;
+}
+.categories::-webkit-scrollbar { display: none; }
+.cat-chip {
+  flex-shrink: 0; padding: 8px 16px; border-radius: 99px;
+  border: 1.5px solid var(--border); font-size: 13px; font-weight: 600;
+  color: var(--text-2); background: #fff; cursor: pointer;
+  transition: all .2s; white-space: nowrap;
+}
+.cat-chip.active {
+  background: var(--grad); color: #fff; border-color: transparent;
+  box-shadow: 0 4px 12px rgba(79,70,229,.3);
+}
+.cat-chip:hover:not(.active) { border-color: var(--indigo); color: var(--indigo); }
+ 
+/* food grid */
+.food-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 14px; padding: 20px 16px;
+}
+.food-card {
+  background: var(--surface); border-radius: var(--radius-md);
+  overflow: hidden; box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(229,231,235,.6);
+  transition: transform .25s, box-shadow .25s;
+}
+.food-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+.food-img {
+  height: 110px; font-size: 58px;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #F3F4F6 0%, #EEF2FF 100%);
+  position: relative; overflow: hidden;
+}
+.food-veg {
+  position: absolute; top: 8px; left: 8px;
+  width: 16px; height: 16px; border-radius: 3px;
+  border: 1.5px solid #059669;
+  display: flex; align-items: center; justify-content: center;
+}
+.food-veg-dot { width: 8px; height: 8px; border-radius: 50%; background: #059669; }
+.food-info { padding: 12px; }
+.food-name { font-size: 13px; font-weight: 700; color: var(--text-1); margin-bottom: 4px; line-height: 1.3; }
+.food-desc { font-size: 11px; color: var(--text-3); margin-bottom: 8px; line-height: 1.4; }
+.food-row {
+  display: flex; align-items: center; justify-content: space-between;
+}
+.food-price { font-size: 15px; font-weight: 800; color: var(--text-1); }
+.food-price span { font-size: 11px; font-weight: 500; color: var(--text-3); }
+ 
+.add-btn {
+  width: 30px; height: 30px; border-radius: 8px;
+  background: var(--grad); color: #fff; border: none;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; cursor: pointer;
+  transition: all .2s; font-weight: 700;
+  box-shadow: 0 2px 8px rgba(79,70,229,.3);
+}
+.add-btn:hover { transform: scale(1.12); box-shadow: 0 4px 14px rgba(79,70,229,.4); }
+.add-btn.added { background: var(--green); box-shadow: 0 2px 8px rgba(16,185,129,.3); }
+ 
+.qty-control {
+  display: flex; align-items: center; gap: 6px;
+}
+.qty-btn {
+  width: 26px; height: 26px; border-radius: 7px; border: none;
+  background: #F3F4F6; color: var(--text-1); font-size: 14px; font-weight: 700;
+  cursor: pointer; transition: background .15s;
+  display: flex; align-items: center; justify-content: center;
+}
+.qty-btn:hover { background: #E5E7EB; }
+.qty-num { font-size: 14px; font-weight: 700; min-width: 20px; text-align: center; }
+ 
+/* floating cart bar */
+.cart-bar {
+  position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+  width: calc(100% - 32px); max-width: 398px;
+  background: var(--grad); border-radius: var(--radius-md);
+  padding: 14px 18px; display: flex; align-items: center; justify-content: space-between;
+  box-shadow: 0 8px 28px rgba(79,70,229,.4);
+  cursor: pointer; z-index: 90;
+  transition: transform .3s, opacity .3s, box-shadow .3s;
+}
+.cart-bar:hover { transform: translateX(-50%) translateY(-2px); }
+.cart-bar.hidden { transform: translateX(-50%) translateY(100px); opacity: 0; pointer-events: none; }
+.cart-bar-left { display: flex; align-items: center; gap: 10px; }
+.cart-count-badge {
+  width: 26px; height: 26px; background: rgba(255,255,255,.25);
+  border-radius: 8px; display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: #fff;
+}
+.cart-bar-label { font-size: 14px; font-weight: 600; color: #fff; }
+.cart-bar-price { font-size: 15px; font-weight: 800; color: #fff; }
+.cart-bar-arrow { color: rgba(255,255,255,.7); font-size: 16px; }
+ 
+/* ─────────────────────────────────────────────────────────────── */
+/*   PAGE 4 · TIME SLOTS                                           */
+/* ─────────────────────────────────────────────────────────────── */
+.slots-header {
+  background: linear-gradient(135deg, #0F0E2E 0%, #1E1B5E 50%, #3730A3 100%);
+  padding: 52px 20px 32px;
+}
+.slots-header h1 {
+  font-family: var(--font-display); font-size: 24px; color: #fff; margin-top: 16px;
+}
+.slots-header p { font-size: 13.5px; color: rgba(255,255,255,.55); margin-top: 6px; }
+ 
+.slots-section { padding: 24px 16px; }
+.slots-day-label {
+  font-size: 12px; font-weight: 700; color: var(--text-3);
+  letter-spacing: .06em; text-transform: uppercase; margin-bottom: 12px;
+}
+ 
+/* horizontal scroll slots */
+.slots-scroll {
+  display: flex; gap: 10px;
+  overflow-x: auto; padding-bottom: 4px;
+  scrollbar-width: none; -webkit-overflow-scrolling: touch;
+}
+.slots-scroll::-webkit-scrollbar { display: none; }
+ 
+.slot-card {
+  flex-shrink: 0; width: 90px;
+  background: var(--surface); border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border);
+  padding: 14px 10px 12px; text-align: center;
+  cursor: pointer; transition: all .22s;
+  position: relative; overflow: hidden;
+}
+.slot-card:hover:not(.selected):not(.full) { border-color: var(--indigo); }
+.slot-card.selected {
+  border-color: var(--indigo);
+  background: linear-gradient(135deg, #EEF2FF 0%, #F5F3FF 100%);
+  box-shadow: 0 4px 16px rgba(79,70,229,.2);
+}
+.slot-card.full { opacity: .5; cursor: not-allowed; background: #F9FAFB; }
+ 
+.slot-time { font-size: 15px; font-weight: 800; color: var(--text-1); margin-bottom: 3px; }
+.slot-card.selected .slot-time { color: var(--indigo); }
+.slot-period { font-size: 10px; color: var(--text-3); margin-bottom: 8px; }
+.slot-dots {
+  display: flex; gap: 2px; justify-content: center; align-items: center; flex-wrap: wrap;
+}
+.slot-dot {
+  width: 5px; height: 5px; border-radius: 50%; background: var(--border);
+}
+.slot-dot.filled { background: var(--indigo); }
+.slot-dot.full-d { background: var(--red); }
+.slot-full-text { font-size: 9.5px; color: var(--red); font-weight: 700; margin-top: 4px; }
+.slot-best {
+  position: absolute; top: 0; right: 0;
+  background: var(--grad); color: #fff;
+  font-size: 8px; font-weight: 700; padding: 3px 6px;
+  border-bottom-left-radius: 8px; letter-spacing: .04em;
+}
+ 
+/* selected slot preview */
+.slot-confirm {
+  margin: 0 16px 20px;
+  background: linear-gradient(135deg, #EEF2FF 0%, #F5F3FF 100%);
+  border: 1.5px solid #C7D2FE; border-radius: var(--radius-md);
+  padding: 18px; display: flex; align-items: center; gap: 14px;
+}
+.slot-confirm-icon {
+  width: 44px; height: 44px; background: var(--grad);
+  border-radius: 13px; display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.slot-confirm h3 { font-size: 15px; font-weight: 700; color: var(--indigo-d); }
+.slot-confirm p  { font-size: 12.5px; color: var(--text-3); margin-top: 2px; }
+ 
+/* wait estimate */
+.wait-card {
+  margin: 0 16px 20px; background: var(--surface);
+  border-radius: var(--radius-md); padding: 16px;
+  box-shadow: var(--shadow-sm); border: 1px solid var(--border);
+}
+.wait-card h4 { font-size: 13px; font-weight: 700; color: var(--text-2); margin-bottom: 12px; }
+.wait-bar-wrap { position: relative; }
+.wait-bar-bg {
+  height: 8px; background: #F3F4F6; border-radius: 99px; overflow: hidden;
+}
+.wait-bar-fill {
+  height: 100%; border-radius: 99px;
+  background: linear-gradient(90deg, #10B981 0%, #F59E0B 50%, #EF4444 100%);
+  transition: width .5s;
+}
+.wait-labels {
+  display: flex; justify-content: space-between;
+  margin-top: 5px; font-size: 10px; color: var(--text-4);
+}
+ 
+/* ─────────────────────────────────────────────────────────────── */
+/*   PAGE 5 · CART & CHECKOUT                                      */
+/* ─────────────────────────────────────────────────────────────── */
+.cart-header {
+  background: #fff; padding: 52px 16px 16px;
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 50;
+}
+.cart-header h1 {
+  font-family: var(--font-display); font-size: 22px; margin-top: 10px;
+}
+ 
+.cart-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px; border-bottom: 1px solid var(--border);
+  background: #fff; transition: background .15s;
+}
+.cart-item:hover { background: #FAFAFA; }
+.cart-item-emoji {
+  width: 54px; height: 54px; border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, #F3F4F6, #EEF2FF);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; flex-shrink: 0;
+}
+.cart-item-info { flex: 1; }
+.cart-item-name { font-size: 14px; font-weight: 700; color: var(--text-1); }
+.cart-item-price { font-size: 13px; color: var(--text-3); margin-top: 3px; }
+.cart-item-remove {
+  color: var(--text-4); font-size: 16px; cursor: pointer;
+  transition: color .15s; background: none; border: none; padding: 4px;
+}
+.cart-item-remove:hover { color: var(--red); }
+ 
+.cart-summary {
+  background: #fff; margin: 0; padding: 20px 16px;
+  border-top: 8px solid var(--bg);
+}
+.summary-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 0;
+}
+.summary-label { font-size: 13.5px; color: var(--text-3); }
+.summary-value { font-size: 13.5px; font-weight: 600; color: var(--text-2); }
+.summary-divider { height: 1px; background: var(--border); margin: 8px 0; }
+.summary-total .summary-label { font-size: 16px; font-weight: 800; color: var(--text-1); }
+.summary-total .summary-value { font-size: 18px; font-weight: 800; color: var(--indigo); }
+ 
+/* pickup selector in cart */
+.pickup-section {
+  padding: 20px 16px; background: var(--bg);
+}
+.pickup-section h3 {
+  font-size: 15px; font-weight: 700; color: var(--text-1); margin-bottom: 14px;
+}
+.pickup-slots { display: flex; gap: 8px; flex-wrap: wrap; }
+.pslot {
+  padding: 9px 16px; border-radius: 99px;
+  border: 1.5px solid var(--border); font-size: 13px; font-weight: 600;
+  color: var(--text-2); cursor: pointer; transition: all .2s;
+}
+.pslot.active {
+  background: var(--grad); color: #fff; border-color: transparent;
+  box-shadow: 0 4px 12px rgba(79,70,229,.25);
+}
+ 
+/* coupon */
+.coupon-row {
+  display: flex; gap: 8px; padding: 0 16px 16px;
+}
+.coupon-row input { padding-left: 16px; }
+ 
+/* checkout CTA */
+.checkout-cta {
+  padding: 16px; background: #fff;
+  border-top: 1px solid var(--border);
+  position: sticky; bottom: 80px;
+}
+ 
+/* ─────────────────────────────────────────────────────────────── */
+/*   PAGE 6 · ORDER TRACKING                                       */
+/* ─────────────────────────────────────────────────────────────── */
+.tracking-header {
+  background: linear-gradient(135deg, #0F0E2E 0%, #1E1B5E 50%, #3730A3 100%);
+  padding: 52px 20px 40px; text-align: center;
+}
+.tracking-header h1 {
+  font-family: var(--font-display); font-size: 22px; color: #fff; margin-top: 12px;
+}
+.tracking-header p { font-size: 13px; color: rgba(255,255,255,.55); margin-top: 6px; }
+.order-id-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2);
+  border-radius: 99px; padding: 6px 14px; font-size: 13px; font-weight: 700;
+  color: rgba(255,255,255,.8); margin-top: 16px;
+}
+ 
+/* big status circle */
+.status-circle-wrap {
+  display: flex; justify-content: center; padding: 32px 16px 24px;
+}
+.status-circle {
+  width: 130px; height: 130px; border-radius: 50%;
+  background: linear-gradient(135deg, #EEF2FF, #F5F3FF);
+  border: 3px solid #C7D2FE;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px; position: relative;
+}
+.status-circle-icon { font-size: 40px; }
+.status-circle-label { font-size: 12px; font-weight: 700; color: var(--indigo); }
+ 
+/* ring animation */
+.ring {
+  position: absolute; inset: -8px; border-radius: 50%;
+  border: 2.5px solid transparent;
+  border-top-color: var(--indigo);
+  animation: spin 1.5s linear infinite;
+}
+.ring2 {
+  inset: -14px; border-top-color: var(--violet); opacity: .5;
+  animation-duration: 2.5s; animation-direction: reverse;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+ 
+/* step progress */
+.progress-steps {
+  padding: 0 24px 24px;
+}
+.step-row {
+  display: flex; align-items: flex-start; gap: 14px; margin-bottom: 0;
+}
+.step-icon-col {
+  display: flex; flex-direction: column; align-items: center;
+}
+.step-circle {
+  width: 38px; height: 38px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 700; flex-shrink: 0;
+  border: 2px solid transparent; transition: all .4s;
+}
+.step-circle.done {
+  background: linear-gradient(135deg, #10B981, #059669);
+  color: #fff; border-color: #10B981;
+  box-shadow: 0 0 0 4px rgba(16,185,129,.15);
+}
+.step-circle.active {
+  background: var(--grad); color: #fff;
+  box-shadow: 0 0 0 4px rgba(79,70,229,.2);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%,100% { box-shadow: 0 0 0 4px rgba(79,70,229,.2); }
+  50%      { box-shadow: 0 0 0 8px rgba(79,70,229,.08); }
+}
+.step-circle.pending {
+  background: #F3F4F6; color: var(--text-3); border-color: var(--border);
+}
+.step-connector {
+  width: 2px; height: 36px; background: var(--border); border-radius: 99px;
+  transition: background .4s; margin: 4px 0;
+}
+.step-connector.done { background: #10B981; }
+ 
+.step-content { padding-top: 6px; flex: 1; padding-bottom: 30px; }
+.step-content h4 { font-size: 15px; font-weight: 700; color: var(--text-1); margin-bottom: 3px; }
+.step-content p  { font-size: 12.5px; color: var(--text-3); line-height: 1.5; }
+.step-time { font-size: 11px; color: var(--text-4); margin-top: 4px; }
+ 
+/* eta card */
+.eta-card {
+  margin: 0 16px 16px; background: var(--grad);
+  border-radius: var(--radius-md); padding: 18px;
+  display: flex; align-items: center; gap: 14px;
+  box-shadow: 0 8px 24px rgba(79,70,229,.3);
+}
+.eta-icon {
+  width: 46px; height: 46px; background: rgba(255,255,255,.2);
+  border-radius: 13px; display: flex; align-items: center; justify-content: center;
+  font-size: 22px; flex-shrink: 0;
+}
+.eta-card h3 { font-size: 20px; font-weight: 800; color: #fff; }
+.eta-card p  { font-size: 12.5px; color: rgba(255,255,255,.7); margin-top: 2px; }
+ 
+/* ─────────────────────────────────────────────────────────────── */
+/*   PAGE 7 · BARCODE                                              */
+/* ─────────────────────────────────────────────────────────────── */
+.barcode-page {
+  background: linear-gradient(160deg, #0F0E2E 0%, #1E1B5E 40%, #3730A3 100%);
+  min-height: 100vh; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; padding: 24px;
+  position: relative; overflow: hidden;
+}
+.barcode-page::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 70% 20%, rgba(124,58,237,.25) 0%, transparent 60%);
+}
+.barcode-card {
+  background: rgba(255,255,255,.06); backdrop-filter: blur(24px);
+  border: 1.5px solid rgba(255,255,255,.15);
+  border-radius: var(--radius-xl); padding: 32px 28px 28px;
+  width: 100%; max-width: 360px; text-align: center;
+  position: relative;
+}
+.barcode-top h2 {
+  font-family: var(--font-display); font-size: 22px; color: #fff; margin-bottom: 4px;
+}
+.barcode-top p { font-size: 13px; color: rgba(255,255,255,.5); margin-bottom: 24px; }
+ 
+/* the actual barcode graphic */
+.barcode-wrap {
+  background: #fff; border-radius: var(--radius-md);
+  padding: 20px 16px 16px; margin-bottom: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.3);
+}
+.barcode-bars {
+  display: flex; gap: 0; align-items: flex-end;
+  height: 80px; justify-content: center;
+  margin-bottom: 12px;
+}
+.bar-unit {
+  background: #111; flex-shrink: 0;
+}
+.barcode-num {
+  font-size: 12px; color: #555; letter-spacing: .14em;
+  font-family: 'Courier New', monospace; font-weight: 700;
+}
+ 
+.barcode-info {
+  background: rgba(255,255,255,.08); border-radius: var(--radius-sm);
+  padding: 14px; margin-bottom: 16px; text-align: left;
+}
+.barcode-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 4px 0;
+}
+.barcode-row:not(:last-child) { border-bottom: 1px solid rgba(255,255,255,.08); padding-bottom: 8px; margin-bottom: 8px; }
+.brow-label { font-size: 11.5px; color: rgba(255,255,255,.4); }
+.brow-value { font-size: 13px; font-weight: 700; color: rgba(255,255,255,.85); }
+ 
+.scan-instruction {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; color: rgba(255,255,255,.45);
+  justify-content: center; margin-top: 4px;
+}
+.scan-instruction i { font-size: 15px; color: #A5B4FC; }
+ 
+/* scan animation overlay */
+.scan-line {
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, transparent 0%, #4F46E5 50%, transparent 100%);
+  border-radius: 99px;
+  animation: scan 2s ease-in-out infinite;
+}
+@keyframes scan {
+  0%   { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(80px); opacity: 0; }
+}
+ 
+/* corner decorations */
+.corner {
+  position: absolute; width: 20px; height: 20px;
+  border-color: rgba(99,102,241,.8); border-style: solid;
+}
+.corner-tl { top: 8px; left: 8px; border-width: 3px 0 0 3px; border-radius: 4px 0 0 0; }
+.corner-tr { top: 8px; right: 8px; border-width: 3px 3px 0 0; border-radius: 0 4px 0 0; }
+.corner-bl { bottom: 8px; left: 8px; border-width: 0 0 3px 3px; border-radius: 0 0 0 4px; }
+.corner-br { bottom: 8px; right: 8px; border-width: 0 3px 3px 0; border-radius: 0 0 4px 0; }
+ 
+/* ─────────────────────────────────────────────────────────────── */
+/*   MISC SHARED COMPONENTS                                        */
+/* ─────────────────────────────────────────────────────────────── */
+.empty-state {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 60px 24px; text-align: center;
+}
+.empty-state .icon { font-size: 56px; margin-bottom: 16px; opacity: .5; }
+.empty-state h3 { font-size: 18px; font-weight: 700; color: var(--text-2); margin-bottom: 6px; }
+.empty-state p  { font-size: 14px; color: var(--text-3); margin-bottom: 20px; line-height: 1.6; }
+ 
+/* success flash */
+.toast {
+  position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-80px);
+  background: #111; color: #fff; padding: 12px 20px; border-radius: 99px;
+  font-size: 13.5px; font-weight: 600; z-index: 1000;
+  transition: transform .35s cubic-bezier(.34,1.56,.64,1);
+  display: flex; align-items: center; gap: 8px;
+  box-shadow: 0 4px 20px rgba(0,0,0,.3);
+  white-space: nowrap;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+ 
+/* shimmer loading effect */
+@keyframes shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position: 600px 0; }
+}
+.shimmer {
+  background: linear-gradient(90deg, #F0F0F0 25%, #E8E8E8 50%, #F0F0F0 75%);
+  background-size: 600px 100%;
+  animation: shimmer 1.5s infinite linear;
+}
+ 
+/* scroll to top fade-in */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-up { animation: slideUp .4s ease both; }
+.delay-1 { animation-delay: .08s; }
+.delay-2 { animation-delay: .16s; }
+.delay-3 { animation-delay: .24s; }
+.delay-4 { animation-delay: .32s; }
+ 
+/* responsive */
+@media (max-width: 380px) {
+  .food-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .canteen-name { font-size: 17px; }
+  .greeting-main { font-size: 22px; }
+}
+</style>
+</head>
+<body>
+ 
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- TOAST NOTIFICATION                                          -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="toast" id="toast">
+  <i class="fa-solid fa-circle-check" style="color:#10B981"></i>
+  <span id="toast-msg">Done!</span>
+</div>
+ 
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- PAGE 1 · LOGIN                                              -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="page active" id="page-login">
+  <div id="login-page">
+    <div class="login-logo animate-up">
+      <div class="logo-icon">🍽️</div>
+      <div class="logo-name">SkipTheLine</div>
+      <div class="logo-tagline">College Canteen · Pre-Order System</div>
+    </div>
+ 
+    <div class="login-card animate-up delay-1" id="login-step-1">
+      <!-- step indicators -->
+      <div class="steps-row">
+        <div class="step-dot active" id="sdot-1">1</div>
+        <div class="step-line" id="sline-1"></div>
+        <div class="step-dot" id="sdot-2">2</div>
+        <div class="step-line" id="sline-2"></div>
+        <div class="step-dot" id="sdot-3">✓</div>
+      </div>
+ 
+      <div id="step-email-view">
+        <h2>Welcome back 👋</h2>
+        <p>Sign in with your college email to continue</p>
+ 
+        <div class="input-wrap" style="margin-bottom:12px">
+          <i class="fa-solid fa-envelope icon"></i>
+          <input type="email" id="email-input" placeholder="yourname@college.edu"
+            value="arjun@engineering.edu" />
+        </div>
+        <button class="login-btn" onclick="sendOTP()">
+          <i class="fa-solid fa-paper-plane"></i>
+          Send OTP
+        </button>
+      </div>
+ 
+      <div id="step-otp-view" style="display:none">
+        <h2>Enter OTP 🔐</h2>
+        <p>Sent to <span id="otp-email-show" style="color:rgba(255,255,255,.7)">—</span></p>
+        <div class="otp-row">
+          <input type="text" maxlength="1" id="o1" oninput="otpFocus(this,'o2')" />
+          <input type="text" maxlength="1" id="o2" oninput="otpFocus(this,'o3')" />
+          <input type="text" maxlength="1" id="o3" oninput="otpFocus(this,'o4')" />
+          <input type="text" maxlength="1" id="o4" />
+        </div>
+        <button class="login-btn" style="margin-top:20px" onclick="verifyOTP()">
+          <i class="fa-solid fa-shield-halved"></i>
+          Verify & Continue
+        </button>
+        <p style="font-size:12px;color:rgba(255,255,255,.4);text-align:center;margin-top:12px;cursor:pointer" onclick="sendOTP()">
+          Didn't receive? <span style="color:rgba(255,255,255,.65)">Resend</span>
+        </p>
+      </div>
+ 
+      <div class="login-footer">
+        By continuing, you agree to our Terms of Use &amp; Privacy Policy.<br/>
+        <span onclick="goToPage('page-home')">Skip Login →</span>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- PAGE 2 · HOME DASHBOARD                                     -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="page" id="page-home">
+  <div class="inner">
+    <!-- header -->
+    <div class="home-header">
+      <div class="header-top">
+        <div class="header-logo">
+          <div class="header-logo-icon">🍽️</div>
+          <div class="header-logo-text">SkipTheLine</div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center">
+          <button onclick="goToPage('page-barcode')"
+            style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
+              border-radius:11px;width:38px;height:38px;color:rgba(255,255,255,.8);
+              font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;">
+            <i class="fa-solid fa-qrcode"></i>
+          </button>
+          <div class="header-avatar" onclick="goToPage('page-barcode')">AJ</div>
+        </div>
+      </div>
+      <div class="greeting animate-up">
+        <div class="greeting-sub">Good afternoon ☀️</div>
+        <div class="greeting-main">Hey, <span>Aksh</span>!<br/>What's for lunch?</div>
+        <div class="stats-pill">
+          <i class="fa-solid fa-clock"></i>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- search -->
+    <div class="home-search animate-up delay-1">
+      <div class="input-wrap" style="position:relative">
+        <i class="fa-solid fa-magnifying-glass icon" style="color:#9CA3AF"></i>
+        <input type="text" placeholder="Search food, canteens…"
+          style="border-radius:var(--radius-md);background:#fff;border-color:rgba(229,231,235,.7);
+            box-shadow:var(--shadow-lg);padding-left:48px;" />
+      </div>
+    </div>
+ 
+    <!-- stats row -->
+    <div class="quick-stats" style="margin-top:20px">
+      <div class="stat-chip animate-up delay-1">
+        <div class="stat-num">4 min</div>
+        <div class="stat-lbl">Avg wait<br/>time</div>
+      </div>
+      <div class="stat-chip animate-up delay-2">
+        <div class="stat-num">3</div>
+        <div class="stat-lbl">Canteens<br/>open</div>
+      </div>
+      <div class="stat-chip animate-up delay-3">
+        <div class="stat-num">47</div>
+        <div class="stat-lbl">Orders<br/>today</div>
+      </div>
+      <div class="stat-chip animate-up delay-4">
+        <div class="stat-num" style="color:#10B981">Low</div>
+        <div class="stat-lbl">Current<br/>crowd</div>
+      </div>
+    </div>
+ 
+    <!-- notice -->
+    <div class="notice-banner animate-up delay-2">
+      <div class="notice-icon">⚡</div>
+      <div class="notice-text">
+        <p>Pre-order opens for 1 PM!</p>
+        <p>Beat the rush — pick a slot now and get fresh food ready</p>
+      </div>
+    </div>
+ 
+    <!-- canteens -->
+    <div class="section">
+      <div class="section-title">Our <span>Canteens</span></div>
+ 
+      <!-- Canteen A -->
+      <div class="canteen-card animate-up delay-1">
+        <div class="canteen-hero" style="background: linear-gradient(135deg,#0F0E2E,#3730A3)">
+          <div class="canteen-bg" style="color:rgba(255,255,255,.06)">🍱</div>
+          <div class="canteen-overlay"></div>
+          <div class="canteen-hero-info">
+            <div>
+              <div class="canteen-name">Anti-Clock</div>
+              <div class="canteen-sub">AI Lab</div>
+            </div>
+            <span class="badge badge-low"><i class="fa-solid fa-circle" style="font-size:6px"></i> Low</span>
+          </div>
+        </div>
+        <div class="canteen-body">
+          <div class="canteen-meta">
+            <span class="meta-item"><i class="fa-solid fa-clock"></i> 4 min wait</span>
+            <span class="meta-item"><i class="fa-solid fa-star"></i> 4.6 rated</span>
+            <span class="meta-item"><i class="fa-solid fa-bowl-food"></i> 28 items</span>
+          </div>
+          <div class="canteen-btns">
+            <button class="btn btn-outline" onclick="goToPage('page-slots')">
+              <i class="fa-regular fa-clock"></i> Pre-Order
+            </button>
+            <button class="btn btn-primary" onclick="goToPage('page-menu')">
+              <i class="fa-solid fa-utensils"></i> Order Now
+            </button>
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Canteen B -->
+      <div class="canteen-card animate-up delay-2">
+        <div class="canteen-hero" style="background: linear-gradient(135deg,#1E3A5F,#0369A1)">
+          <div class="canteen-bg" style="color:rgba(255,255,255,.06)">🍜</div>
+          <div class="canteen-overlay"></div>
+          <div class="canteen-hero-info">
+            <div>
+              <div class="canteen-name">Clockwise</div>
+              <div class="canteen-sub">I Block</div>
+            </div>
+            <span class="badge badge-medium"><i class="fa-solid fa-circle" style="font-size:6px"></i> Medium</span>
+          </div>
+        </div>
+        <div class="canteen-body">
+          <div class="canteen-meta">
+            <span class="meta-item"><i class="fa-solid fa-clock"></i> 9 min wait</span>
+            <span class="meta-item"><i class="fa-solid fa-star"></i> 4.3 rated</span>
+            <span class="meta-item"><i class="fa-solid fa-bowl-food"></i> 18 items</span>
+          </div>
+          <div class="canteen-btns">
+            <button class="btn btn-outline" onclick="goToPage('page-slots')">
+              <i class="fa-regular fa-clock"></i> Pre-Order
+            </button>
+            <button class="btn btn-primary" onclick="goToPage('page-menu')">
+              <i class="fa-solid fa-utensils"></i> Order Now
+            </button>
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Canteen C -->
+      <div class="canteen-card animate-up delay-3">
+        <div class="canteen-hero" style="background: linear-gradient(135deg,#1A1007,#854D0E)">
+          <div class="canteen-bg" style="color:rgba(255,255,255,.06)">☕</div>
+          <div class="canteen-overlay"></div>
+          <div class="canteen-hero-info">
+            <div>
+              <div class="canteen-name">Container</div>
+              <div class="canteen-sub">Design Block</div>
+            </div>
+            <span class="badge badge-high"><i class="fa-solid fa-circle" style="font-size:6px"></i> High</span>
+          </div>
+        </div>
+        <div class="canteen-body">
+          <div class="canteen-meta">
+            <span class="meta-item"><i class="fa-solid fa-clock"></i> 17 min wait</span>
+            <span class="meta-item"><i class="fa-solid fa-star"></i> 4.8 rated</span>
+            <span class="meta-item"><i class="fa-solid fa-bowl-food"></i> 22 items</span>
+          </div>
+          <div class="canteen-btns">
+            <button class="btn btn-outline" onclick="goToPage('page-slots')">
+              <i class="fa-regular fa-clock"></i> Pre-Order
+            </button>
+            <button class="btn btn-primary" onclick="goToPage('page-menu')">
+              <i class="fa-solid fa-utensils"></i> Order Now
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+  <nav class="bottom-nav">
+    <div class="nav-item active"><i class="fa-solid fa-house"></i>Home</div>
+    <div class="nav-item" onclick="goToPage('page-menu')"><i class="fa-solid fa-bowl-food"></i>Menu</div>
+    <div class="nav-item" onclick="goToPage('page-cart')"><i class="fa-solid fa-bag-shopping"></i>Cart</div>
+    <div class="nav-item" onclick="goToPage('page-tracking')"><i class="fa-solid fa-location-dot"></i>Track</div>
+    <div class="nav-item" onclick="goToPage('page-barcode')"><i class="fa-solid fa-qrcode"></i>Pass</div>
+  </nav>
+</div>
+ 
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- PAGE 3 · MENU                                               -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="page" id="page-menu">
+  <div class="inner">
+    <div class="page-header">
+      <button class="back-btn" onclick="goToPage('page-home')">
+        <i class="fa-solid fa-arrow-left"></i> Back
+      </button>
+      <h1>Anti-Clock 🍱</h1>
+      <div class="categories" id="categories">
+        <div class="cat-chip active" onclick="filterMenu('all',this)">🍽 All</div>
+        <div class="cat-chip" onclick="filterMenu('rice',this)">🍚 Rice & Thali</div>
+        <div class="cat-chip" onclick="filterMenu('snack',this)">🥪 Snacks</div>
+        <div class="cat-chip" onclick="filterMenu('drink',this)">🥤 Drinks</div>
+        <div class="cat-chip" onclick="filterMenu('dessert',this)">🍮 Desserts</div>
+      </div>
+    </div>
+ 
+    <div class="food-grid" id="food-grid"></div>
+ 
+    <!-- floating cart bar -->
+    <div class="cart-bar hidden" id="cart-bar" onclick="goToPage('page-cart')">
+      <div class="cart-bar-left">
+        <div class="cart-count-badge" id="cart-count-badge">0</div>
+        <div>
+          <div class="cart-bar-label">View Cart</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.65)">Tap to checkout</div>
+        </div>
+      </div>
+      <div class="flex-c gap-8">
+        <div class="cart-bar-price" id="cart-bar-price">₹0</div>
+        <i class="fa-solid fa-chevron-right cart-bar-arrow"></i>
+      </div>
+    </div>
+  </div>
+ 
+  <nav class="bottom-nav">
+    <div class="nav-item" onclick="goToPage('page-home')"><i class="fa-solid fa-house"></i>Home</div>
+    <div class="nav-item active"><i class="fa-solid fa-bowl-food"></i>Menu</div>
+    <div class="nav-item" onclick="goToPage('page-cart')"><i class="fa-solid fa-bag-shopping"></i>Cart</div>
+    <div class="nav-item" onclick="goToPage('page-tracking')"><i class="fa-solid fa-location-dot"></i>Track</div>
+    <div class="nav-item" onclick="goToPage('page-barcode')"><i class="fa-solid fa-qrcode"></i>Pass</div>
+  </nav>
+</div>
+ 
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- PAGE 4 · TIME SLOTS                                         -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="page" id="page-slots">
+  <div class="inner">
+    <div class="slots-header">
+      <button class="back-btn" onclick="goToPage('page-home')"
+        style="color:rgba(255,255,255,.6);background:none;border:none;font-family:var(--font);
+          font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+        <i class="fa-solid fa-arrow-left"></i> Back
+      </button>
+      <h1>Pick Your Slot ⏰</h1>
+      <p>Choose a time to pick up your order — we'll prepare it fresh</p>
+    </div>
+ 
+    <!-- wait estimate -->
+    <div class="wait-card" style="margin:20px 16px 0">
+      <h4><i class="fa-solid fa-chart-bar" style="color:var(--indigo);margin-right:6px"></i>Live Queue Forecast Today</h4>
+      <div class="wait-bar-bg">
+        <div class="wait-bar-fill" id="crowd-bar" style="width:35%"></div>
+      </div>
+      <div class="wait-labels">
+        <span>9 AM</span><span>11 AM</span><span>1 PM</span><span>3 PM</span>
+      </div>
+      <div style="display:flex;gap:14px;margin-top:10px">
+        <span style="font-size:12px;color:#10B981"><i class="fa-solid fa-circle" style="font-size:8px"></i> Low</span>
+        <span style="font-size:12px;color:#F59E0B"><i class="fa-solid fa-circle" style="font-size:8px"></i> Medium</span>
+        <span style="font-size:12px;color:#EF4444"><i class="fa-solid fa-circle" style="font-size:8px"></i> High</span>
+      </div>
+    </div>
+ 
+    <div class="slots-section">
+      <div class="slots-day-label">Today · Lunch</div>
+      <div class="slots-scroll" id="slots-container"></div>
+    </div>
+ 
+    <!-- confirm card -->
+    <div class="slot-confirm" id="slot-confirm-card">
+      <div class="slot-confirm-icon">🕐</div>
+      <div>
+        <h3 id="confirm-slot-text">Select a time slot above</h3>
+        <p id="confirm-slot-sub">Your food will be ready at your chosen time</p>
+      </div>
+    </div>
+ 
+    <div style="padding:0 16px 20px">
+      <button class="btn btn-primary btn-full" style="padding:16px"
+        onclick="confirmSlot()">
+        <i class="fa-solid fa-check-circle"></i>
+        Confirm This Slot
+      </button>
+    </div>
+  </div>
+</div>
+ 
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- PAGE 5 · CART & CHECKOUT                                    -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="page" id="page-cart">
+  <div class="inner">
+    <div class="cart-header">
+      <button class="back-btn" onclick="goToPage('page-menu')">
+        <i class="fa-solid fa-arrow-left"></i> Back
+      </button>
+      <h1>Your Cart 🛒</h1>
+    </div>
+ 
+    <div id="cart-items-list"></div>
+ 
+    <!-- pickup time in cart -->
+    <div class="pickup-section">
+      <h3><i class="fa-regular fa-clock" style="color:var(--indigo);margin-right:6px"></i>Pick-up Time</h3>
+      <div class="pickup-slots" id="pickup-slots-cart">
+        <div class="pslot" onclick="selectPickup(this)">12:00 PM</div>
+        <div class="pslot active" onclick="selectPickup(this)">12:30 PM</div>
+        <div class="pslot" onclick="selectPickup(this)">1:00 PM</div>
+        <div class="pslot" onclick="selectPickup(this)">1:30 PM</div>
+        <div class="pslot" onclick="selectPickup(this)">2:00 PM</div>
+      </div>
+    </div>
+ 
+    <!-- coupon -->
+    <div class="coupon-row">
+      <div class="input-wrap" style="flex:1">
+        <i class="fa-solid fa-tag icon"></i>
+        <input type="text" placeholder="Enter coupon code" style="padding-left:44px" />
+      </div>
+      <button class="btn btn-ghost btn-sm" style="height:50px;border-radius:var(--radius-sm)">Apply</button>
+    </div>
+ 
+    <!-- summary -->
+    <div class="cart-summary" id="cart-summary">
+      <div class="summary-row">
+        <span class="summary-label">Subtotal</span>
+        <span class="summary-value" id="subtotal-val">₹0</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Platform Fee</span>
+        <span class="summary-value">₹2</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label" style="color:#10B981">
+          <i class="fa-solid fa-tag" style="font-size:11px;margin-right:3px"></i>
+          Student Discount (10%)
+        </span>
+        <span class="summary-value" style="color:#10B981" id="discount-val">−₹0</span>
+      </div>
+      <div class="summary-divider"></div>
+      <div class="summary-row summary-total">
+        <span class="summary-label">Total</span>
+        <span class="summary-value" id="total-val">₹2</span>
+      </div>
+    </div>
+ 
+    <div class="checkout-cta">
+      <button class="btn btn-primary btn-full" style="padding:16px;font-size:15px"
+        onclick="placeOrder()">
+        <i class="fa-solid fa-check-circle"></i>
+        Place Order · <span id="cta-price">₹0</span>
+      </button>
+    </div>
+  </div>
+ 
+  <nav class="bottom-nav">
+    <div class="nav-item" onclick="goToPage('page-home')"><i class="fa-solid fa-house"></i>Home</div>
+    <div class="nav-item" onclick="goToPage('page-menu')"><i class="fa-solid fa-bowl-food"></i>Menu</div>
+    <div class="nav-item active"><i class="fa-solid fa-bag-shopping"></i>Cart</div>
+    <div class="nav-item" onclick="goToPage('page-tracking')"><i class="fa-solid fa-location-dot"></i>Track</div>
+    <div class="nav-item" onclick="goToPage('page-barcode')"><i class="fa-solid fa-qrcode"></i>Pass</div>
+  </nav>
+</div>
+ 
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- PAGE 6 · ORDER TRACKING                                     -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="page" id="page-tracking">
+  <div class="inner">
+    <div class="tracking-header">
+      <button class="back-btn" onclick="goToPage('page-home')"
+        style="color:rgba(255,255,255,.6);background:none;border:none;font-family:var(--font);
+          font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+        <i class="fa-solid fa-arrow-left"></i> Back
+      </button>
+      <h1>Order Tracking 📍</h1>
+      <p>ClockWise · Today 12:30 PM</p>
+      <div class="order-id-badge">
+        <i class="fa-solid fa-hashtag"></i> Order QM-2041
+      </div>
+    </div>
+ 
+    <!-- animated status circle -->
+    <div class="status-circle-wrap">
+      <div class="status-circle" id="status-circle">
+        <div class="ring" id="ring1"></div>
+        <div class="ring ring2" id="ring2"></div>
+        <div class="status-circle-icon" id="status-icon">👨‍🍳</div>
+        <div class="status-circle-label" id="status-label">Preparing</div>
+      </div>
+    </div>
+ 
+    <!-- ETA card -->
+    <div class="eta-card animate-up">
+      <div class="eta-icon">⏱</div>
+      <div>
+        <h3 id="eta-time">~8 minutes</h3>
+        <p>Estimated ready time · Fresh & hot!</p>
+      </div>
+    </div>
+ 
+    <!-- progress steps -->
+    <div class="progress-steps">
+      <div class="step-row">
+        <div class="step-icon-col">
+          <div class="step-circle done"><i class="fa-solid fa-check"></i></div>
+          <div class="step-connector done"></div>
+        </div>
+        <div class="step-content">
+          <h4>Order Placed</h4>
+          <p>Your order has been received and confirmed by the canteen</p>
+          <div class="step-time">12:02 PM · Confirmed</div>
+        </div>
+      </div>
+ 
+      <div class="step-row">
+        <div class="step-icon-col">
+          <div class="step-circle done"><i class="fa-solid fa-check"></i></div>
+          <div class="step-connector done"></div>
+        </div>
+        <div class="step-content">
+          <h4>Kitchen Notified</h4>
+          <p>Chef noted your 12:30 PM pickup — fresh preparation scheduled</p>
+          <div class="step-time">12:05 PM · Chef Rajan assigned</div>
+        </div>
+      </div>
+ 
+      <div class="step-row">
+        <div class="step-icon-col">
+          <div class="step-circle active"><i class="fa-solid fa-fire"></i></div>
+          <div class="step-connector"></div>
+        </div>
+        <div class="step-content">
+          <h4>Being Prepared 🔥</h4>
+          <p>Your Veg Thali and Paneer Sandwich are being freshly cooked</p>
+          <div class="step-time">12:18 PM · In progress…</div>
+        </div>
+      </div>
+ 
+      <div class="step-row">
+        <div class="step-icon-col">
+          <div class="step-circle pending"><i class="fa-solid fa-bell"></i></div>
+          <div class="step-connector"></div>
+        </div>
+        <div class="step-content">
+          <h4>Ready for Pickup</h4>
+          <p>We'll notify you the moment your order is ready at the counter</p>
+          <div class="step-time">Estimated 12:30 PM</div>
+        </div>
+      </div>
+ 
+      <div class="step-row">
+        <div class="step-icon-col">
+          <div class="step-circle pending"><i class="fa-solid fa-qrcode"></i></div>
+        </div>
+        <div class="step-content" style="padding-bottom:0">
+          <h4>Scan & Collect</h4>
+          <p>Show your barcode pass at the counter to collect your order</p>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- barcode link -->
+    <div style="padding:0 16px 20px">
+      <button class="btn btn-ghost btn-full" style="padding:14px"
+        onclick="goToPage('page-barcode')">
+        <i class="fa-solid fa-qrcode"></i>
+        View My Barcode Pass
+      </button>
+    </div>
+ 
+    <!-- simulate progress -->
+    <div style="padding:0 16px 24px">
+      <button class="btn btn-outline btn-full" onclick="advanceTracking()"
+        style="padding:12px;font-size:13px">
+        <i class="fa-solid fa-play"></i>
+        Simulate Next Step (Demo)
+      </button>
+    </div>
+  </div>
+ 
+  <nav class="bottom-nav">
+    <div class="nav-item" onclick="goToPage('page-home')"><i class="fa-solid fa-house"></i>Home</div>
+    <div class="nav-item" onclick="goToPage('page-menu')"><i class="fa-solid fa-bowl-food"></i>Menu</div>
+    <div class="nav-item" onclick="goToPage('page-cart')"><i class="fa-solid fa-bag-shopping"></i>Cart</div>
+    <div class="nav-item active"><i class="fa-solid fa-location-dot"></i>Track</div>
+    <div class="nav-item" onclick="goToPage('page-barcode')"><i class="fa-solid fa-qrcode"></i>Pass</div>
+  </nav>
+</div>
+ 
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- PAGE 7 · BARCODE                                            -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="page" id="page-barcode">
+  <div class="barcode-page">
+    <div style="position:absolute;top:20px;left:20px;z-index:10">
+      <button onclick="goToPage('page-home')"
+        style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
+          border-radius:10px;width:38px;height:38px;color:rgba(255,255,255,.8);
+          font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;">
+        <i class="fa-solid fa-arrow-left"></i>
+      </button>
+    </div>
+ 
+    <div style="text-align:center;margin-bottom:24px;position:relative;z-index:1">
+      <div style="font-family:var(--font-display);font-size:28px;color:#fff">
+        Your Pass 🎫
+      </div>
+      <div style="font-size:13px;color:rgba(255,255,255,.45);margin-top:6px">
+        Show this at the canteen counter
+      </div>
+    </div>
+ 
+    <div class="barcode-card animate-up">
+      <div class="corner corner-tl"></div>
+      <div class="corner corner-tr"></div>
+      <div class="corner corner-bl"></div>
+      <div class="corner corner-br"></div>
+ 
+      <div class="barcode-top">
+        <h2>SmartQueue</h2>
+        <p>Order Collection Pass</p>
+      </div>
+ 
+      <!-- barcode graphic -->
+      <div class="barcode-wrap">
+        <div class="barcode-bars" id="barcode-bars" style="position:relative;overflow:hidden">
+          <div class="scan-line"></div>
+          <!-- generated by JS -->
+        </div>
+        <div class="barcode-num" id="barcode-num">4 71294 92810 4</div>
+      </div>
+ 
+      <!-- order info -->
+      <div class="barcode-info">
+        <div class="barcode-row">
+          <span class="brow-label">Order ID</span>
+          <span class="brow-value">#QM-2041</span>
+        </div>
+        <div class="barcode-row">
+          <span class="brow-label">Student</span>
+          <span class="brow-value">Aksh S. · CS Yr3</span>
+        </div>
+        <div class="barcode-row">
+          <span class="brow-label">Canteen</span>
+          <span class="brow-value">Container · Design Block</span>
+        </div>
+        <div class="barcode-row">
+          <span class="brow-label">Pick-up</span>
+          <span class="brow-value">12:30 PM Today</span>
+        </div>
+        <div class="barcode-row">
+          <span class="brow-label">Status</span>
+          <span class="brow-value" style="color:#34D399">
+            <i class="fa-solid fa-circle" style="font-size:8px;margin-right:3px"></i>
+            Being Prepared
+          </span>
+        </div>
+      </div>
+ 
+      <div class="scan-instruction">
+        <i class="fa-solid fa-barcode"></i>
+        Scan barcode at the collection counter
+      </div>
+    </div>
+ 
+    <div style="margin-top:20px;display:flex;gap:10px;width:100%;max-width:360px;position:relative;z-index:1">
+      <button class="btn btn-ghost btn-full" onclick="goToPage('page-tracking')"
+        style="background:rgba(255,255,255,.1);color:rgba(255,255,255,.8);
+          border:1px solid rgba(255,255,255,.2);padding:13px">
+        <i class="fa-solid fa-location-dot"></i> Track Order
+      </button>
+      <button class="btn btn-primary btn-full" onclick="showToast('Pass shared!')"
+        style="padding:13px">
+        <i class="fa-solid fa-share-nodes"></i> Share
+      </button>
+    </div>
+  </div>
+</div>
+ 
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- JAVASCRIPT                                                   -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<script>
+
+const API_BASE = "http://127.0.0.1:8000";
+/* ── STATE ──────────────────────────────────────────────── */
+const cart = {};   // { itemId: { item, qty } }
+let selectedSlot = '12:30 PM';
+let trackingStep = 2;
+ 
+/* ── MENU DATA ──────────────────────────────────────────── */
+const menuItems = [
+  { id:1, name:'Veg Thali',        emoji:'🍱', price:60, desc:'Dal, sabzi, roti, rice', cat:'rice',    veg:true  },
+  { id:2, name:'Curd Rice',        emoji:'🍚', price:40, desc:'Tempered, curry leaves',  cat:'rice',    veg:true  },
+  { id:3, name:'Rajma Chawal',     emoji:'🥘', price:50, desc:'Creamy rajma, steamed',   cat:'rice',    veg:true  },
+  { id:4, name:'Paneer Sandwich',  emoji:'🥪', price:35, desc:'Grilled, chutney',        cat:'snack',   veg:true  },
+  { id:5, name:'Samosa (2 pcs)',   emoji:'🥟', price:20, desc:'Crispy, green chutney',   cat:'snack',   veg:true  },
+  { id:6, name:'Bread Pakora',     emoji:'🍞', price:18, desc:'With tamarind dip',       cat:'snack',   veg:true  },
+  { id:7, name:'Masala Chai',      emoji:'☕', price:12, desc:'Freshly brewed, 200ml',   cat:'drink',   veg:true  },
+  { id:8, name:'Cold Coffee',      emoji:'🧋', price:30, desc:'Blended, chilled',        cat:'drink',   veg:true  },
+  { id:9, name:'Fresh Lime Soda',  emoji:'🍋', price:25, desc:'Sweet or salted',         cat:'drink',   veg:true  },
+  { id:10,name:'Gulab Jamun',      emoji:'🍯', price:22, desc:'Warm, sugar syrup',       cat:'dessert', veg:true  },
+  { id:11,name:'Kheer',            emoji:'🥣', price:28, desc:'Rice pudding, kesar',     cat:'dessert', veg:true  },
+  { id:12,name:'Ice Cream Cup',    emoji:'🍨', price:30, desc:'Vanilla / Chocolate',     cat:'dessert', veg:true  },
+];
+ 
+let currentCat = 'all';
+ 
+/* ── SLOT DATA ──────────────────────────────────────────── */
+const slots = [
+  { time:'11:30', period:'AM', fill:1, max:8, best:false, full:false },
+  { time:'12:00', period:'PM', fill:5, max:8, best:false, full:false },
+  { time:'12:15', period:'PM', fill:8, max:8, best:false, full:true  },
+  { time:'12:30', period:'PM', fill:3, max:8, best:true,  full:false },
+  { time:'12:45', period:'PM', fill:2, max:8, best:false, full:false },
+  { time:'1:00',  period:'PM', fill:6, max:8, best:false, full:false },
+  { time:'1:15',  period:'PM', fill:7, max:8, best:false, full:false },
+  { time:'1:30',  period:'PM', fill:1, max:8, best:false, full:false },
+  { time:'2:00',  period:'PM', fill:0, max:8, best:false, full:false },
+];
+ 
+/* ── PAGE NAVIGATION ────────────────────────────────────── */
+function goToPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const p = document.getElementById(id);
+  if (p) {
+    p.classList.add('active');
+    window.scrollTo(0, 0);
+    p.querySelectorAll('.page').forEach(c => c.classList.remove('active'));
+  }
+}
+ 
+/* ── TOAST ──────────────────────────────────────────────── */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  const m = document.getElementById('toast-msg');
+  m.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2600);
+}
+ 
+/* ── LOGIN ──────────────────────────────────────────────── */
+function sendOTP() {
+  const email = document.getElementById('email-input').value.trim();
+  if (!email || !email.includes('@')) { showToast('Enter a valid email'); return; }
+  document.getElementById('otp-email-show').textContent = email;
+  document.getElementById('step-email-view').style.display = 'none';
+  document.getElementById('step-otp-view').style.display  = 'block';
+  document.getElementById('sdot-1').classList.add('done');
+  document.getElementById('sdot-2').classList.add('active');
+  document.getElementById('sline-1').classList.add('done');
+  document.getElementById('o1').focus();
+  showToast('OTP sent → use 1234 for demo');
+}
+ 
+function otpFocus(current, nextId) {
+  if (current.value.length === 1) {
+    const next = document.getElementById(nextId);
+    if (next) next.focus();
+  }
+}
+ 
+async function verifyOTP() {
+  const code = ['o1','o2','o3','o4'].map(id => document.getElementById(id).value).join('');
+
+  if (code.length < 4) {
+    showToast('Enter the 4-digit OTP');
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_BASE}/auth/verify-otp`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: document.getElementById('otp-email-show').textContent,
+        otp: code
+      })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      showToast("Login Successful! Welcome 👋");
+      setTimeout(() => goToPage('page-home'), 800);
+    } else {
+      showToast(data.detail || "Invalid or expired OTP");
+    }
+  } catch (err) {
+    showToast("Cannot connect to backend");
+  }
+}
+ 
+/* ── MENU RENDER ────────────────────────────────────────── */
+function renderMenu() {
+  const grid = document.getElementById('food-grid');
+  const filtered = currentCat === 'all' ? menuItems : menuItems.filter(i => i.cat === currentCat);
+ 
+  grid.innerHTML = filtered.map(item => {
+    const qty = cart[item.id] ? cart[item.id].qty : 0;
+    return `
+    <div class="food-card" id="food-card-${item.id}">
+      <div class="food-img">
+        ${item.veg ? `<div class="food-veg"><div class="food-veg-dot"></div></div>` : ''}
+        ${item.emoji}
+      </div>
+      <div class="food-info">
+        <div class="food-name">${item.name}</div>
+        <div class="food-desc">${item.desc}</div>
+        <div class="food-row">
+          <div class="food-price">₹${item.price}</div>
+          <div id="add-ctrl-${item.id}">
+            ${qty === 0
+              ? `<button class="add-btn" onclick="addToCart(${item.id})"><i class="fa-solid fa-plus"></i></button>`
+              : `<div class="qty-control">
+                  <button class="qty-btn" onclick="changeQty(${item.id},-1)">−</button>
+                  <span class="qty-num">${qty}</span>
+                  <button class="qty-btn" onclick="changeQty(${item.id},1)">+</button>
+                </div>`
+            }
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+ 
+function filterMenu(cat, el) {
+  currentCat = cat;
+  document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderMenu();
+}
+ 
+function addToCart(id) {
+  const item = menuItems.find(m => m.id === id);
+  if (!item) return;
+  cart[id] = { item, qty: 1 };
+  renderMenu();
+  updateCartBar();
+  showToast(`${item.name} added!`);
+}
+ 
+function changeQty(id, delta) {
+  if (!cart[id]) return;
+  cart[id].qty += delta;
+  if (cart[id].qty <= 0) delete cart[id];
+  renderMenu();
+  updateCartBar();
+}
+ 
+function updateCartBar() {
+  const bar  = document.getElementById('cart-bar');
+  const cnt  = document.getElementById('cart-count-badge');
+  const priceEl = document.getElementById('cart-bar-price');
+  const total = Object.values(cart).reduce((s, v) => s + v.item.price * v.qty, 0);
+  const count = Object.values(cart).reduce((s, v) => s + v.qty, 0);
+  if (count === 0) { bar.classList.add('hidden'); return; }
+  bar.classList.remove('hidden');
+  cnt.textContent  = count;
+  priceEl.textContent = `₹${total}`;
+}
+ 
+/* ── SLOTS ──────────────────────────────────────────────── */
+function renderSlots() {
+  const container = document.getElementById('slots-container');
+  container.innerHTML = slots.map((s, i) => {
+    const dots = Array.from({length: s.max}, (_, j) =>
+      `<div class="slot-dot ${s.full ? 'full-d' : j < s.fill ? 'filled' : ''}"></div>`
+    ).join('');
+    const isSelected = (s.time + ' ' + s.period) === selectedSlot;
+    return `
+    <div class="slot-card ${s.full ? 'full' : ''} ${isSelected ? 'selected' : ''}"
+         onclick="${s.full ? '' : `selectSlot('${s.time}','${s.period}',this)`}">
+      ${s.best ? `<div class="slot-best">BEST</div>` : ''}
+      <div class="slot-time">${s.time}</div>
+      <div class="slot-period">${s.period}</div>
+      <div class="slot-dots">${dots}</div>
+      ${s.full ? `<div class="slot-full-text">FULL</div>` : ''}
+    </div>`;
+  }).join('');
+}
+ 
+function selectSlot(time, period, el) {
+  selectedSlot = time + ' ' + period;
+  document.querySelectorAll('.slot-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  const confirmText = document.getElementById('confirm-slot-text');
+  const confirmSub  = document.getElementById('confirm-slot-sub');
+  confirmText.textContent = `${time} ${period} selected`;
+  confirmSub.textContent  = 'Your food will be freshly prepared by this time';
+}
+ 
+function confirmSlot() {
+  showToast(`Slot ${selectedSlot} confirmed!`);
+  setTimeout(() => goToPage('page-menu'), 500);
+}
+ 
+/* ── CART PAGE ──────────────────────────────────────────── */
+function renderCartPage() {
+  const list = document.getElementById('cart-items-list');
+  const entries = Object.values(cart);
+ 
+  if (entries.length === 0) {
+    list.innerHTML = `
+      <div class="empty-state">
+        <div class="icon">🛒</div>
+        <h3>Cart is empty</h3>
+        <p>Add items from the menu to get started</p>
+        <button class="btn btn-primary" onclick="goToPage('page-menu')">
+          <i class="fa-solid fa-utensils"></i> Browse Menu
+        </button>
+      </div>`;
+    document.getElementById('subtotal-val').textContent = '₹0';
+    document.getElementById('discount-val').textContent = '−₹0';
+    document.getElementById('total-val').textContent    = '₹2';
+    document.getElementById('cta-price').textContent    = '₹2';
+    return;
+  }
+ 
+  list.innerHTML = entries.map(({item, qty}) => `
+    <div class="cart-item">
+      <div class="cart-item-emoji">${item.emoji}</div>
+      <div class="cart-item-info">
+        <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-price">₹${item.price} × ${qty} = ₹${item.price * qty}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="qty-control">
+          <button class="qty-btn" onclick="cartQty(${item.id},-1)">−</button>
+          <span class="qty-num">${qty}</span>
+          <button class="qty-btn" onclick="cartQty(${item.id},1)">+</button>
+        </div>
+        <button class="cart-item-remove" onclick="removeFromCart(${item.id})">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </div>
+    </div>
+  `).join('');
+ 
+  const subtotal = entries.reduce((s, v) => s + v.item.price * v.qty, 0);
+  const discount = Math.round(subtotal * 0.1);
+  const total    = subtotal - discount + 2;
+  document.getElementById('subtotal-val').textContent = `₹${subtotal}`;
+  document.getElementById('discount-val').textContent = `−₹${discount}`;
+  document.getElementById('total-val').textContent    = `₹${total}`;
+  document.getElementById('cta-price').textContent    = `₹${total}`;
+}
+ 
+function cartQty(id, delta) {
+  if (!cart[id]) return;
+  cart[id].qty += delta;
+  if (cart[id].qty <= 0) delete cart[id];
+  renderCartPage();
+  renderMenu();
+  updateCartBar();
+}
+ 
+function removeFromCart(id) {
+  delete cart[id];
+  renderCartPage();
+  renderMenu();
+  updateCartBar();
+}
+ 
+function selectPickup(el) {
+  document.querySelectorAll('#pickup-slots-cart .pslot').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// BACKEND CONNECTED ORDER
+async function placeOrderBackend(itemName) {
+  const email = document.getElementById("email-input").value;
+
+  try {
+    const res = await fetch("http://127.0.0.1:8000/place-order", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        email: email,
+        items: itemName
+      })
+    });
+
+    const data = await res.json();
+
+    showToast("Order placed with backend ✅");
+
+    goToPage('page-barcode');
+
+  } catch (err) {
+    showToast("Server error ❌");
+    console.error(err);
+  }
+}
+ 
+async function placeOrder() {
+  const count = Object.keys(cart).length;
+  if (count === 0) { 
+    showToast('Add items first!'); 
+    return; 
+  }
+
+  const itemsList = Object.values(cart).map(item => item.item.name);
+  const total = Object.values(cart).reduce((s, v) => s + v.item.price * v.qty, 0);
+
+  try {
+    const res = await fetch(`${API_BASE}/orders/place-order`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: document.getElementById('email-input').value || "Ku2407u011@karnavatiuniversity.edu.in",
+        items: itemsList,
+        pickup_time: selectedSlot,
+        total_amount: total
+      })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      showToast(`Order placed! Token: ${data.token}`);
+      Object.keys(cart).forEach(k => delete cart[k]);
+      renderCartPage();
+      updateCartBar();
+      setTimeout(() => goToPage('page-tracking'), 1000);
+    } else {
+      showToast(data.detail || "Failed to place order");
+    }
+  } catch (err) {
+    showToast("Backend error - is server running?");
+  }
+}
+ 
+/* ── TRACKING ───────────────────────────────────────────── */
+const trackingStates = [
+  { icon:'✅', label:'Confirmed',  eta:'Confirmed!',     msg:'Order placed and confirmed' },
+  { icon:'👨‍🍳', label:'Preparing',  eta:'~8 minutes',    msg:'Chef is cooking your order'  },
+  { icon:'🔔', label:'Ready!',     eta:'Ready now!',     msg:'Come collect at counter'     },
+  { icon:'🎫', label:'Collected',  eta:'Enjoy! 🎉',      msg:'Order successfully collected'},
+];
+ 
+function advanceTracking() {
+  trackingStep = Math.min(trackingStep + 1, 3);
+  const state = trackingStates[trackingStep];
+  document.getElementById('status-icon').textContent  = state.icon;
+  document.getElementById('status-label').textContent = state.label;
+  document.getElementById('eta-time').textContent     = state.eta;
+ 
+  // update circles
+  const circles = document.querySelectorAll('.step-circle');
+  const connectors = document.querySelectorAll('.step-connector');
+  circles.forEach((c, i) => {
+    c.className = 'step-circle';
+    if (i < trackingStep) { c.classList.add('done'); c.innerHTML = '<i class="fa-solid fa-check"></i>'; }
+    else if (i === trackingStep) { c.classList.add('active'); }
+    else { c.classList.add('pending'); }
+  });
+  connectors.forEach((c, i) => {
+    c.className = 'step-connector';
+    if (i < trackingStep) c.classList.add('done');
+  });
+ 
+  if (trackingStep === 2) {
+    document.getElementById('ring1').style.display = 'none';
+    document.getElementById('ring2').style.display = 'none';
+    document.getElementById('status-circle').style.borderColor = '#10B981';
+    document.getElementById('status-circle').style.background = 'linear-gradient(135deg,#D1FAE5,#A7F3D0)';
+  }
+ 
+  showToast(state.msg);
+}
+ 
+/* ── BARCODE GENERATOR ──────────────────────────────────── */
+function generateBarcode() {
+  const container = document.getElementById('barcode-bars');
+  if (!container) return;
+  const pattern = [3,1,4,1,5,1,2,3,1,2,4,1,3,1,2,4,1,3,2,1,4,2,1,3,4,1,2,3,1,4,2,1,3,1,2];
+  let html = '';
+  pattern.forEach((w, i) => {
+    if (i % 2 === 0) {
+      const h = 55 + (i % 4 === 0 ? 20 : 0);
+      html += `<div class="bar-unit" style="width:${w}px;height:${h}px"></div>`;
+    } else {
+      html += `<div style="width:${w}px;height:1px"></div>`;
+    }
+  });
+  // preserve the scan-line overlay
+  const scanLine = container.querySelector('.scan-line');
+  container.innerHTML = html;
+  if (scanLine) container.prepend(scanLine);
+}
+ 
+/* ── INIT ───────────────────────────────────────────────── */
+renderMenu();
+renderSlots();
+generateBarcode();
+ 
+// pre-load cart page whenever we navigate to it
+document.addEventListener('click', e => {
+  if (e.target.closest('[onclick="goToPage(\'page-cart\')"]') ||
+      e.target.closest('.cart-bar')) {
+    setTimeout(renderCartPage, 50);
+  }
+});
+ 
+// Also re-render cart when page-cart becomes active
+const observer = new MutationObserver(mutations => {
+  mutations.forEach(m => {
+    if (m.target.id === 'page-cart' && m.target.classList.contains('active')) {
+      renderCartPage();
+    }
+  });
+});
+document.querySelectorAll('.page').forEach(p => {
+  observer.observe(p, { attributes: true, attributeFilter: ['class'] });
+});
+</script>
+</body>
+</html>
