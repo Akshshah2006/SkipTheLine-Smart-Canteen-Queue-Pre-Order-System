@@ -24,8 +24,8 @@ app.add_middleware(
 # Mount static folder for QR codes
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-from routes.auth import router as auth_router
-from routes.orders import router as orders_router
+from routers.auth import router as auth_router
+from routers.orders import router as orders_router
 app.include_router(payments.router)
 
 @app.get("/")
