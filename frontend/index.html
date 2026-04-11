@@ -1001,7 +1001,7 @@ input::placeholder { color: var(--text-4); }
         <div class="input-wrap" style="margin-bottom:12px">
           <i class="fa-solid fa-envelope icon"></i>
           <input type="email" id="email-input" placeholder="yourname@college.edu"
-            value="arjun@engineering.edu" />
+            value="aksh@karnavati.edu.in" />
         </div>
         <button class="login-btn" onclick="sendOTP()">
           <i class="fa-solid fa-paper-plane"></i>
@@ -1569,7 +1569,7 @@ input::placeholder { color: var(--text-4); }
         </div>
         <div class="barcode-row">
           <span class="brow-label">Canteen</span>
-          <span class="brow-value">Container · Design Block</span>
+          <span class="brow-value">Anti-Clock · AI Lab</span>
         </div>
         <div class="barcode-row">
           <span class="brow-label">Pick-up</span>
@@ -1608,8 +1608,6 @@ input::placeholder { color: var(--text-4); }
 <!-- JAVASCRIPT                                                   -->
 <!-- ══════════════════════════════════════════════════════════ -->
 <script>
-
-const API_BASE = "http://127.0.0.1:8000";
 /* ── STATE ──────────────────────────────────────────────── */
 const cart = {};   // { itemId: { item, qty } }
 let selectedSlot = '12:30 PM';
@@ -1687,35 +1685,14 @@ function otpFocus(current, nextId) {
   }
 }
  
-async function verifyOTP() {
+function verifyOTP() {
   const code = ['o1','o2','o3','o4'].map(id => document.getElementById(id).value).join('');
-
-  if (code.length < 4) {
-    showToast('Enter the 4-digit OTP');
-    return;
-  }
-
-  try {
-    const res = await fetch(`${API_BASE}/auth/verify-otp`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: document.getElementById('otp-email-show').textContent,
-        otp: code
-      })
-    });
-
-    const data = await res.json();
-
-    if (res.ok) {
-      showToast("Login Successful! Welcome 👋");
-      setTimeout(() => goToPage('page-home'), 800);
-    } else {
-      showToast(data.detail || "Invalid or expired OTP");
-    }
-  } catch (err) {
-    showToast("Cannot connect to backend");
-  }
+  if (code.length < 4) { showToast('Enter the 4-digit OTP'); return; }
+  document.getElementById('sdot-2').classList.add('done');
+  document.getElementById('sdot-3').classList.add('active');
+  document.getElementById('sline-2').classList.add('done');
+  showToast('Verified! Welcome Aksh 👋');
+  setTimeout(() => goToPage('page-home'), 900);
 }
  
 /* ── MENU RENDER ────────────────────────────────────────── */
@@ -1921,42 +1898,14 @@ async function placeOrderBackend(itemName) {
   }
 }
  
-async function placeOrder() {
+function placeOrder() {
   const count = Object.keys(cart).length;
-  if (count === 0) { 
-    showToast('Add items first!'); 
-    return; 
-  }
-
-  const itemsList = Object.values(cart).map(item => item.item.name);
-  const total = Object.values(cart).reduce((s, v) => s + v.item.price * v.qty, 0);
-
-  try {
-    const res = await fetch(`${API_BASE}/orders/place-order`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: document.getElementById('email-input').value || "Ku2407u011@karnavatiuniversity.edu.in",
-        items: itemsList,
-        pickup_time: selectedSlot,
-        total_amount: total
-      })
-    });
-
-    const data = await res.json();
-
-    if (res.ok) {
-      showToast(`Order placed! Token: ${data.token}`);
-      Object.keys(cart).forEach(k => delete cart[k]);
-      renderCartPage();
-      updateCartBar();
-      setTimeout(() => goToPage('page-tracking'), 1000);
-    } else {
-      showToast(data.detail || "Failed to place order");
-    }
-  } catch (err) {
-    showToast("Backend error - is server running?");
-  }
+  if (count === 0) { showToast('Add items first!'); return; }
+  showToast('Order placed! #QM-2041 🎉');
+  Object.keys(cart).forEach(k => delete cart[k]);
+  renderCartPage();
+  updateCartBar();
+  setTimeout(() => goToPage('page-tracking'), 800);
 }
  
 /* ── TRACKING ───────────────────────────────────────────── */
